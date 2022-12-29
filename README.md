@@ -1,26 +1,42 @@
 # parsedmarc-dockerized
 
-Note: The standalone `parsedmarc` docker image on [DockerHub @ patschi/parsedmarc](https://hub.docker.com/r/patschi/parsedmarc) can also be used, if interested.
+Note: The inscructions here assume you are using a modern Debian derivative. You may need to adapt these instructions for your distro/environment.
 
 ## Setup:
-1. Get basics together:
+
+1. Set up your Docker environment:
+You'll need at least 1.5GB RAM (2GB is recommended) and at least 25GB disk space.
+Your environment will also need access to Cloudflare's DNS service to function correctly.
 ```
-git clone https://github.com/patschi/parsedmarc-dockerized.git /opt/parsedmarc-dockerized/
-cd /opt/parsedmarc-dockerized/ && cp data/conf/parsedmarc/config.sample.ini data/conf/parsedmarc/config.ini
+sudo su
+apt update
+apt -y upgrade
+apt -y install vim git
+reboot
 ```
 
-2. Next we change the `parsedmarc` config (see [docs](https://domainaware.github.io/parsedmarc/#configuration-file). You can set `Test` to `True` for testing purposes.)
 ```
-nano data/conf/parsedmarc/config.ini
+sudo su
+curl -sSL https://get.docker.com/ | CHANNEL=stable sh
+systemctl enable docker.service
+systemctl start docker.service
+curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64 > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
 ```
 
-3. Now we create an environment file, containing your geoipupdate settings from your [MaxMind account](https://www.maxmind.com/en/account/) to allow the container to pull the databases. For update cycles of the databases, please see [here](https://support.maxmind.com/geoip-faq/geoip2-and-geoip-legacy-database-updates/how-often-are-the-geoip2-and-geoip-legacy-databases-updated/). (Fill in your data!)
+2. Clone this repo:
 ```
-cat > geoipupdate.env <<EOF
-GEOIPUPDATE_ACCOUNT_ID=HERE_GOES_YOUR_ACCOUNT_ID
-GEOIPUPDATE_LICENSE_KEY=HERE_GOES_YOUR_LICENSE_KEY
-GEOIPUPDATE_FREQUENCY=24
-EOF
+git clone https://github.com/virtualfabric/parsedmarc-dockerized.git /opt/parsedmarc-dockerized/
+```
+
+2. Next we change the `parsedmarc` config (see [docs](https://domainaware.github.io/parsedmarc/#configuration-file). In most cases, you should only need to adjust the `[imap]` section to match your mail server config. It is recommended that you use an application password if your IMAP server supports it.
+```
+vim data/conf/parsedmarc/config.ini
+```
+
+3. Now change the environment file containing your geoipupdate settings from your [MaxMind account](https://www.maxmind.com/en/account/), to allow the container to pull the databases. For update cycles of the databases, please see [here](https://support.maxmind.com/geoip-faq/geoip2-and-geoip-legacy-database-updates/how-often-are-the-geoip2-and-geoip-legacy-databases-updated/).
+```
+vim geoipupdate.env
 ```
 
 4. Finally, we start up the stack and wait:
@@ -28,7 +44,7 @@ EOF
 docker-compose up -d
 ```
 
-### What's happening then?
+### What happens now?
 
 1. First, containers of the stack are created and started. This might take a while, as several containers have dependencies on others being in a healthy state (meaning that its service must be fully started).
 2. During the startup of the `parsedmarc-init` container, all required steps and preparations are being taken care of - like generating a self-signed certificate for the included `nginx` webserver.
