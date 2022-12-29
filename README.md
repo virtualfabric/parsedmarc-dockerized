@@ -26,6 +26,7 @@ chmod +x /usr/local/bin/docker-compose
 2. Clone this repo:
 ```
 git clone https://github.com/virtualfabric/parsedmarc-dockerized.git /opt/parsedmarc-dockerized/
+cd /opt/parsedmarc-dockerized/
 ```
 
 
