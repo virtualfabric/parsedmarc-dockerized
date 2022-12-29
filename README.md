@@ -8,7 +8,6 @@ Note: The inscructions here assume you are using a modern Debian derivative and 
 1. Set up your Docker environment:
 You'll need at least 1.5GB RAM (2GB is recommended) and at least 25GB disk space. Your environment will also need access to Cloudflare's DNS service to function correctly.
 ```
-sudo su
 apt update
 apt -y upgrade
 apt -y install vim git
@@ -16,7 +15,6 @@ reboot
 ```
 
 ```
-sudo su
 curl -sSL https://get.docker.com/ | CHANNEL=stable sh
 systemctl enable docker.service
 systemctl start docker.service
