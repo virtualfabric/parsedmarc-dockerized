@@ -1,12 +1,12 @@
 # parsedmarc-dockerized
 
-Note: The inscructions here assume you are using a modern Debian derivative and that your are logged in as `root`. You may need to adapt these instructions for your distro/environment.
+> The inscructions here assume you are using a modern Debian derivative and that your are logged in as `root`. You may need to adapt these instructions for your distro/environment.
 
 
 ## Setup:
 
 1. Set up your Docker environment:
-You'll need at least 1.5GB RAM (2GB is recommended) and at least 25GB disk space. Your environment will also need access to Cloudflare's DNS service to function correctly.
+> You'll need at least 1.5GB RAM (2GB is recommended) and at least 25GB disk space. Your environment will also need access to Cloudflare's DNS service to function correctly.
 ```
 apt update
 apt -y upgrade
